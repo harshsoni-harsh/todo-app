@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input"
 import axios, { AxiosError } from "axios"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -66,7 +67,10 @@ export default function Page() {
   return (
     <div className="flex flex-col items-center p-4 grow justify-center">
       <Form {...form}>
-        <form className="space-y-6 border border-black p-8">
+        <form className="space-y-6 border border-black p-8 pt-0">
+          <div className="text-center mb-0 py-6">
+            <Link href='/' className="text-xl">Todo App</Link>
+          </div>
           <FormField
             control={form.control}
             name="email"
