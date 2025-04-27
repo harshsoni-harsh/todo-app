@@ -17,6 +17,14 @@ exports.signup = async (req, res) => {
 
       const token = authService.generateToken(newUser);
 
+      res.cookie("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 60 * 60 * 1000,
+        path: "/",
+      });
+
       res.status(201).json({
         message: "User registered successfully",
         token,
@@ -41,13 +49,21 @@ exports.login = async (req, res) => {
 
       const isMatch = await authService.comparePassword(
         password,
-        user.password,
+        user.password
       );
       if (!isMatch) {
         return res.status(400).json({ error: "Invalid credentials" });
       }
 
       const token = authService.generateToken(user);
+
+      res.cookie("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 60 * 60 * 1000,
+        path: "/",
+      });
 
       res.status(200).json({
         message: "Login successful",
