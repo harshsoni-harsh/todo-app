@@ -1,5 +1,6 @@
-const { Server } = require('socket.io');
-const Todo = require('../models/todo.model');
+const { Server } = require("socket.io");
+const { authenticateSocket } = require("../middlewares/auth.middleware");
+const Todo = require("../models/todo.model");
 
 let io;
 
@@ -12,15 +13,17 @@ const initSocketIO = (server) => {
     },
   });
 
-  io.use(require('../middlewares/auth.middleware').authenticateSocket);
+  io.use(authenticateSocket);
 
   initChangeStream(io);
 
-  io.on('connection', (socket) => {
-    console.log(`User ${socket.userId} connected`);
+  io.on("connection", (socket) => {
+    console.log(`User ${socket.user.email} connected with id ${socket.id}`);
 
-    socket.on('disconnect', () => {
-      console.log(`User ${socket.userId} disconnected`);
+    socket.join(socket.user.id);
+
+    socket.on("disconnect", () => {
+      console.log(`User ${socket.user.email} disconnected`);
     });
   });
 
@@ -31,15 +34,21 @@ const initChangeStream = async (io) => {
   try {
     const changeStream = Todo.watch();
 
-    changeStream.on('change', (change) => {
-      console.log('Change detected:', change);
-      io.emit('dataChanged', change);
+    changeStream.on("change", (change) => {
+      io.emit("dataChanged", change);
     });
 
-    console.log('Change stream initialized successfully.');
+    console.log("Change stream initialized successfully.");
   } catch (err) {
-    console.error('Error setting up change stream:', err);
+    console.error("Error setting up change stream:", err);
   }
 };
 
-module.exports = { initSocketIO };
+const getIO = () => {
+  if (!io) {
+    throw new Error("Socket.io not initialized");
+  }
+  return io;
+};
+
+module.exports = { initSocketIO, getIO };

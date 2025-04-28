@@ -18,15 +18,14 @@ export default function Page() {
   useEffect(() => {
     const socket = io(BACKEND_URI, {
       withCredentials: true,
+      transports: ["websocket"]
     });
 
     socket.on('todoCreated', (newTodo: Todo) => {
-      console.log('Received todoCreated:', newTodo);
       setTodos((prev) => [...prev, { ...newTodo, id: newTodo._id! }]);
     });
 
     socket.on('todoUpdated', (updatedTodo: Todo) => {
-      console.log('Received todoUpdated:', updatedTodo);
       setTodos((prev) =>
         prev.map((todo) =>
           todo.id === updatedTodo._id
@@ -37,7 +36,6 @@ export default function Page() {
     });
 
     socket.on('todoDeleted', (deletedTodoId: string) => {
-      console.log('Received todoDeleted:', deletedTodoId);
       setTodos((prev) => prev.filter((todo) => todo.id !== deletedTodoId));
     });
 
