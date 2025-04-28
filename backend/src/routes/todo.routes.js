@@ -1,6 +1,6 @@
 const express = require("express");
 const todoController = require("../controllers/todo.controller");
-const verifyToken = require("../middlewares/auth.middleware");
+const { verifyToken } = require("../middlewares/auth.middleware");
 
 const router = express.Router();
 router.use(verifyToken);

@@ -2,6 +2,7 @@
 import axios from "axios";
 import { ChangeEvent, useEffect, useState } from "react";
 import TodoItem from "./TodoItem";
+import { io } from "socket.io-client";
 
 const BACKEND_URI = process.env.NEXT_PUBLIC_BACKEND_URI;
 
@@ -15,7 +16,36 @@ export default function Page() {
   const [todos, setTodos] = useState<Todo[]>([]);
 
   useEffect(() => {
+    const socket = io(BACKEND_URI, {
+      withCredentials: true,
+    });
+
+    socket.on('todoCreated', (newTodo: Todo) => {
+      console.log('Received todoCreated:', newTodo);
+      setTodos((prev) => [...prev, { ...newTodo, id: newTodo._id! }]);
+    });
+
+    socket.on('todoUpdated', (updatedTodo: Todo) => {
+      console.log('Received todoUpdated:', updatedTodo);
+      setTodos((prev) =>
+        prev.map((todo) =>
+          todo.id === updatedTodo._id
+            ? { ...updatedTodo, id: updatedTodo._id }
+            : todo
+        )
+      );
+    });
+
+    socket.on('todoDeleted', (deletedTodoId: string) => {
+      console.log('Received todoDeleted:', deletedTodoId);
+      setTodos((prev) => prev.filter((todo) => todo.id !== deletedTodoId));
+    });
+
     updateTodos();
+
+    return () => {
+      socket.disconnect();
+    };
   }, []);
 
   function changeTodoTitle(e: ChangeEvent<HTMLInputElement>) {
@@ -29,11 +59,9 @@ export default function Page() {
   }
 
   async function createTodo() {
-    const { data } = await axios.post(`${BACKEND_URI}/api/todos`, todo, {
+    await axios.post(`${BACKEND_URI}/api/todos`, todo, {
       withCredentials: true,
     });
-    data.todo.id = data.todo._id;
-    setTodos((prev) => [...prev, data.todo]);
     setTodo({ id: "", title: "", description: "", completed: false });
   }
 
@@ -69,7 +97,6 @@ export default function Page() {
       await axios.delete(`${BACKEND_URI}/api/todos/${id}`, {
         withCredentials: true,
       });
-      await updateTodos();
     } catch (error) {}
   }
 
@@ -91,7 +118,6 @@ export default function Page() {
           withCredentials: true,
         }
       );
-      await updateTodos();
     } catch (error) {}
   }
 
