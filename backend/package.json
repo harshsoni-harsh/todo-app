@@ -14,14 +14,17 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.14.0",
     "nodemon": "^3.1.10",
-    "socket.io": "^4.8.1"
+    "socket.io": "^4.8.1",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
-      "@biomejs/biome"
+      "@biomejs/biome",
+      "@scarf/scarf"
     ]
   }
 }
