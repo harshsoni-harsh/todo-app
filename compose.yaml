@@ -1,0 +1,23 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - 4000:4000
+    env_file:
+      - .env
+
+  frontend:
+    build: 
+      context: ./frontend
+      args:
+        NEXT_PUBLIC_BACKEND_URI: ${NEXT_PUBLIC_BACKEND_URI}
+    env_file:
+      - .env
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx_reverse_proxy
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro,z
