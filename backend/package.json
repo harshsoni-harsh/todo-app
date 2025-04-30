@@ -2,7 +2,8 @@
   "scripts": {
     "start": "nodemon src/app.js",
     "lint": "biome lint .",
-    "format": "pnpm biome check --linter-enabled=false --organize-imports-enabled=true --write ."
+    "format": "pnpm biome check --linter-enabled=false --organize-imports-enabled=true --write .",
+    "test": "jest"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",
