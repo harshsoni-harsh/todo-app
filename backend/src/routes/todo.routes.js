@@ -44,7 +44,7 @@ router.use(verifyToken);
  *     summary: Create a new todo
  *     tags: [Todos]
  *     security:
- *       - cookieAuth: [] 
+ *       - cookieAuth: []
  *     requestBody:
  *       required: true
  *       content:

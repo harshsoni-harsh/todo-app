@@ -49,7 +49,7 @@ exports.login = async (req, res) => {
 
       const isMatch = await authService.comparePassword(
         password,
-        user.password
+        user.password,
       );
       if (!isMatch) {
         return res.status(400).json({ error: "Invalid credentials" });

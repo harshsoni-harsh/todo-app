@@ -3,19 +3,19 @@ const cookie = require("cookie");
 
 exports.authenticateSocket = (socket, next) => {
   try {
-    const cookies = cookie.parse(socket.handshake.headers.cookie || '');
+    const cookies = cookie.parse(socket.handshake.headers.cookie || "");
     const token = cookies.token;
 
     if (!token) {
-      return next(new Error('Authentication error: No token provided'));
+      return next(new Error("Authentication error: No token provided"));
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     socket.user = decoded;
     next();
   } catch (error) {
-    console.error('Socket auth error:', error);
-    next(new Error('Authentication error: Invalid or expired token'));
+    console.error("Socket auth error:", error);
+    next(new Error("Authentication error: Invalid or expired token"));
   }
 };
 

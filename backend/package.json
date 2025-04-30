@@ -23,9 +23,6 @@
     "@biomejs/biome": "^1.9.4"
   },
   "pnpm": {
-    "onlyBuiltDependencies": [
-      "@biomejs/biome",
-      "@scarf/scarf"
-    ]
+    "onlyBuiltDependencies": ["@biomejs/biome", "@scarf/scarf"]
   }
 }

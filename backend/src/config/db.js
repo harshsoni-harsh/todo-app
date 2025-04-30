@@ -11,11 +11,11 @@ const connectDB = async () => {
       process.exit(0);
     };
 
-    process.on('SIGINT', () => gracefulExit('SIGINT'));
-    process.on('SIGTERM', () => gracefulExit('SIGTERM'));
-    process.once('SIGUSR2', async () => {
-      await gracefulExit('SIGUSR2');
-      process.kill(process.pid, 'SIGUSR2');
+    process.on("SIGINT", () => gracefulExit("SIGINT"));
+    process.on("SIGTERM", () => gracefulExit("SIGTERM"));
+    process.once("SIGUSR2", async () => {
+      await gracefulExit("SIGUSR2");
+      process.kill(process.pid, "SIGUSR2");
     });
   } catch (err) {
     console.error("Error connecting to MongoDB:", err.message);

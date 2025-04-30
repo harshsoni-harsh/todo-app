@@ -13,7 +13,7 @@ exports.createTodo = async (req, res) => {
     await todo.save();
 
     const io = getIO();
-    io.to(userId).emit('todoCreated', todo);
+    io.to(userId).emit("todoCreated", todo);
 
     res.status(201).json({ todo });
   } catch (error) {
@@ -43,7 +43,7 @@ exports.updateTodo = async (req, res) => {
     if (!todo) return res.status(404).json({ error: "Todo not found" });
 
     const io = getIO();
-    io.to(userId).emit('todoUpdated', todo);
+    io.to(userId).emit("todoUpdated", todo);
 
     res.status(200).json({ todo });
   } catch (error) {
@@ -59,7 +59,7 @@ exports.deleteTodo = async (req, res) => {
     if (!todo) return res.status(404).json({ error: "Todo not found" });
 
     const io = getIO();
-    io.to(userId).emit('todoDeleted', todo._id);
+    io.to(userId).emit("todoDeleted", todo._id);
 
     res.status(200).json({ message: "Todo deleted" });
   } catch (error) {
